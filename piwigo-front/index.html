@@ -22,12 +22,25 @@
                 .success(function (res) {
                     $scope.images = res.result.images;
                     $scope.items = [];
-                    console.log($scope.images);
+                    //console.log($scope.images);
                     for (i = 0; i < $scope.images.length; i++) {
                         $scope.items[i] = {};
                         $scope.items[i].url = $scope.images[i].derivatives.thumb.url;
                         $scope.items[i].width = $scope.images[i].derivatives.thumb.width;
                         $scope.items[i].height = $scope.images[i].derivatives.thumb.height;
+                    }
+
+                    var m = $scope.items.length, t, i;
+
+                    // While there remain elements to shuffle
+                    while (m) {
+                        // Pick a remaining element…
+                        i = Math.floor(Math.random() * m--);
+
+                        // And swap it with the current element.
+                        t = $scope.items[m];
+                        $scope.items[m] = $scope.items[i];
+                        $scope.items[i] = t;
                     }
                 });
     }])
