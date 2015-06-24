@@ -7,8 +7,8 @@
 <html ng-app="demo">
 <body ng-controller="DemoCtrl">
 <div magicview class="magicview" data-items="items">
-    <div class="item" ng-repeat="image in images">
-        <img ng-src="{{image.derivatives.thumb.url}}" width="{{image.derivatives.thumb.width}}" height="{{image.derivatives.thumb.height}}" alt="">
+    <div class="item" ng-repeat="item in items">
+        <img ng-src="{{item.url}}" alt="">
     </div>
 </div>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -22,8 +22,16 @@
         $http.get('http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag=public')
                 .success(function (res) {
                     $scope.images = res.result.images;
-                    //console.log($scope.images[0].derivatives.thumb);
+		    $scope.items = [];
                     console.log($scope.images);
+		    for (i=0;i<$scope.images.length;i++) {
+			$scope.items[i] = {};
+			$scope.items[i].url = $scope.images[i].derivatives.thumb.url;
+			$scope.items[i].width = $scope.images[i].derivatives.thumb.width;
+			$scope.items[i].height = $scope.images[i].derivatives.thumb.height;
+		
+		    }
+                    //console.log($scope.images[0].derivatives.thumb);
                 });
     }])
 
