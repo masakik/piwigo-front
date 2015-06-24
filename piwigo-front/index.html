@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<html ng-app="demo">
+<body ng-controller="DemoCtrl">
+<div magicview class="magicview" data-items="items">
+    <div class="item" ng-repeat="item in items">
+        <img ng-src="{{item.url}}" alt="">
+    </div>
+</div>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular.min.js"></script>
+<script src="./lib/angular-magicview/js/magicview.js"></script>
+
+<script type="text/javascript">
+    var demo = angular.module('demo', ['ui.magicview']);
+
+    demo.controller('DemoCtrl', ['$scope', '$http', function ($scope, $http) {
+        $http.get('http://imagens.eesc.usp.br/imagens/ws.php?format=rest&method=pwg.images.search&query=tag=public')
+                .success(function (response) {
+                   // $scope.names = response;
+                    console.log(response);
+                });
+        $scope.items = [
+
+            {
+                title: "img1",
+                url: "https://lh4.googleusercontent.com/-QNEzGy5w03o/UyfxhncSizI/AAAAAAAAAS8/aHsGyfrolL8/s0/00ca4ee4c9d30140c6abb0fe9b44f48f%252520-%252520Copy%252520%2525282%252529.jpg",
+                width: 194,
+                height: 227
+            },
+            {
+                title: "img7",
+                url: "https://lh6.googleusercontent.com/-ZBsO1ZZPwnw/Uyfx63qjDbI/AAAAAAAAATc/Fj67BLCWFEA/s0/b1cb496071a2427c7b13679db404df2e%252520-%252520Copy%252520-%252520Copy%252520-%252520Copy%252520%2525288%252529.jpg",
+                width: 680,
+                height: 680
+            }
+        ]
+    }])
+</script>
+
+</body>
+</html>
