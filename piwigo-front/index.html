@@ -7,8 +7,8 @@
 <html ng-app="demo">
 <body ng-controller="DemoCtrl">
 <div magicview class="magicview" data-items="items">
-    <div class="item" ng-repeat="item in items">
-        <img ng-src="{{item.url}}" alt="">
+    <div class="item" ng-repeat="image in images">
+        <img ng-src="{{image.derivatives.thumb.url}}" width="{{image.derivatives.thumb.width}}" height="{{image.derivatives.thumb.height}}" alt="">
     </div>
 </div>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -20,10 +20,96 @@
 
     demo.controller('DemoCtrl', ['$scope', '$http', function ($scope, $http) {
         $http.get('http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag=public')
-                .success(function (response) {
-                   // $scope.names = response;
-                    console.log(response);
+                .success(function (res) {
+                    $scope.images = res.result.images;
+                    //console.log($scope.images[0].derivatives.thumb);
+                    console.log($scope.images);
                 });
+angular.module('ui.magicview',[])
+.value('rconfig', {
+	maxHeight: 130,
+	margin: '0px 4px 4px 0px'
+})
+.directive('magicview', ['$window','$timeout', function ($window, $timeout) {
+	return {
+		restrict: 'A',
+		replace: true,
+		transclude: true,
+		template: '<div ng-transclude></div>',
+		scope: {
+			items: '='
+		},
+		link: function (scope, element, attrs, ctrl) {
+			ctrl.setSelector(attrs.selector || 'img')
+			var w = angular.element($window);
+			w.bind('resize', function () {
+				$timeout(function () {
+					ctrl.layout()
+				}, 0)
+			})
+			scope.$watchCollection('items', function () {
+				$timeout(function () {
+					ctrl.layout()
+				},0)
+			})
+		},
+		controller: function ($scope, $element, rconfig) {
+			var _HEIGHTS = [];
+			var _selector = ''
+
+			this.setSelector = function (selector) {
+				_selector = selector
+			}
+
+			function getheight(images, width, items) {
+			  width -= images.length * 5;
+			  var h = 0;
+			  for (var i = 0; i < images.length; ++i) {
+			    h += items[i].width / items[i].height;
+			  }
+			  return width / h;
+			}
+
+			function setheight(images, height, items) {
+			  _HEIGHTS.push(height);
+			  for (var i = 0; i < images.length; ++i) {
+			    $(images[i]).css({
+			      width: height * items[i].width / items[i].height,
+			      height: height
+			    });
+			  }
+			}
+
+			this.layout = function () {
+			  $('.magicview .item').css('display', 'inline-block')
+			  $(_selector, '.magicview .item').css('margin', rconfig.margin)
+			  var maxHeight = rconfig.maxHeight			  
+			  var size = $element.innerWidth() - 20;
+			  var n = 0;
+			  var images = $(_selector, $element);
+			  var items = $scope.items
+			  w: while (images.length > 0) {
+			    for (var i = 1; i < images.length + 1; ++i) {
+			      var slice = images.slice(0, i);
+			      var slice_items = items.slice(0, i)
+			      var h = getheight(slice, size, slice_items);
+			      if (h < maxHeight) {
+			        setheight(slice, h, slice_items);
+			        n++;
+			        images = images.slice(i);
+			        items = items.slice(i);
+			        continue w;
+			      }
+			    }
+			    setheight(slice, Math.min(maxHeight, h), slice_items);
+			    n++;
+			    break;
+			  }
+			}
+
+		}
+	}		
+}])
         $scope.items = [
 
             {
