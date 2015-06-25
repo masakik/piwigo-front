@@ -16,6 +16,12 @@
 <script src="./lib/angular-magicview/js/magicview.js"></script>
 
 <script type="text/javascript">
+    angular.module('ui.magicview',[])
+            .value('rconfig', {
+                maxHeight: 180,
+                margin: '2px 3px 3px 2px'
+            });
+
     var demo = angular.module('demo', ['ui.magicview']);
 
     demo.controller('DemoCtrl', ['$scope', '$http', function ($scope, $http) {
