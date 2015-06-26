@@ -22,9 +22,9 @@
                 margin: '2px 3px 3px 2px'
             });
 
-    var demo = angular.module('demo', ['ui.magicview', '$interval']);
+    var demo = angular.module('demo', ['ui.magicview']);
 
-    demo.controller('DemoCtrl', ['$scope', '$http', function ($scope, $http, $interval) {
+    demo.controller('DemoCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
 
         $scope.tag = 'public';
         $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag='+$scope.tag;
