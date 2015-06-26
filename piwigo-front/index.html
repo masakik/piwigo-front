@@ -8,7 +8,7 @@
 <h1>Escola de Engenharia de São Carlos</h1>
 
 <div magicview class="magicview" data-items="items">
-    <div class="item" ng-repeat="item in items">
+    <div class="item" ng-repeat="item in items | limitTo:quantity">
         <img ng-src="{{item.url}}" alt="">
     </div>
 </div>
@@ -31,6 +31,7 @@
         $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag=' + $scope.tag;
         // $scope.shuffle = true;
         $scope.size = 'small';
+        $scope.quantity = 16;
 
         // -> Fisher–Yates shuffle algorithm
         $scope.shuffleArray = function (array) {
