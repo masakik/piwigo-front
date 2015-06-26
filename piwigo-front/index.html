@@ -6,6 +6,7 @@
 </head>
 <body ng-controller="DemoCtrl">
 <h1>Escola de Engenharia de São Carlos</h1>
+
 <div magicview class="magicview" data-items="items">
     <div class="item" ng-repeat="item in items">
         <img ng-src="{{item.url}}" alt="">
@@ -27,12 +28,12 @@
     demo.controller('DemoCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
 
         $scope.tag = 'public';
-        $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag='+$scope.tag;
-       // $scope.shuffle = true;
+        $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag=' + $scope.tag;
+        // $scope.shuffle = true;
         $scope.size = 'small';
 
         // -> Fisher–Yates shuffle algorithm
-        $scope.shuffleArray = function(array) {
+        $scope.shuffleArray = function (array) {
             var m = array.length, t, i;
 
             // While there remain elements to shuffle
@@ -48,10 +49,6 @@
             return array;
         };
 
-	$scope.shuffle = function(){
-		$scope.items = $scope.shuffleArray($scope.items);
-	};
-
         $http.get($scope.get)
                 .success(function (res) {
                     $scope.images = res.result.images;
@@ -63,9 +60,11 @@
                         $scope.items[i].width = $scope.images[i].derivatives.small.width;
                         $scope.items[i].height = $scope.images[i].derivatives.small.height;
                     }
-        	    $interval($scope.shuffle,5000);
+                    $interval(function () {
+                        $scope.items = $scope.shuffleArray($scope.items);
+                    }, 5000);
                     //if ($scope.shuffle)
-                        //$scope.items = $scope.shuffleArray($scope.items);
+                    //$scope.items = $scope.shuffleArray($scope.items);
                 });
 
 
