@@ -29,6 +29,7 @@
         $scope.tag = 'public';
         $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag='+$scope.tag;
         $scope.shuffle = true;
+        $scope.size = 'small';
 
         // -> Fisher–Yates shuffle algorithm
         $scope.shuffleArray = function(array) {
@@ -45,7 +46,9 @@
                 array[i] = t;
             }
             return array;
-        }
+        };
+
+        $interval($scope.shuffleArray($scope.items),3000);
 
         $http.get($scope.get)
                 .success(function (res) {
@@ -54,9 +57,9 @@
                     //console.log($scope.images);
                     for (i = 0; i < $scope.images.length; i++) {
                         $scope.items[i] = {};
-                        $scope.items[i].url = $scope.images[i].derivatives.thumb.url;
-                        $scope.items[i].width = $scope.images[i].derivatives.thumb.width;
-                        $scope.items[i].height = $scope.images[i].derivatives.thumb.height;
+                        $scope.items[i].url = $scope.images[i].derivatives.small.url;
+                        $scope.items[i].width = $scope.images[i].derivatives.small.width;
+                        $scope.items[i].height = $scope.images[i].derivatives.small.height;
                     }
                     if ($scope.shuffle)
                         $scope.items = $scope.shuffleArray($scope.items);
