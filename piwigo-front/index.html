@@ -16,7 +16,7 @@
 <script src="./lib/angular-magicview/js/magicview.js"></script>
 
 <script type="text/javascript">
-    angular.module('ui.magicview',[])
+    angular.module('ui.magicview')
             .value('rconfig', {
                 maxHeight: 180,
                 margin: '2px 3px 3px 2px'
@@ -28,7 +28,7 @@
 
         $scope.tag = 'public';
         $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag='+$scope.tag;
-        $scope.shuffle = true;
+       // $scope.shuffle = true;
         $scope.size = 'small';
 
         // -> Fisher–Yates shuffle algorithm
@@ -48,7 +48,9 @@
             return array;
         };
 
-        $interval($scope.shuffleArray($scope.items),3000);
+	$scope.shuffle = function(){
+		$scope.items = $scope.shuffleArray($scope.items);
+	};
 
         $http.get($scope.get)
                 .success(function (res) {
@@ -61,9 +63,12 @@
                         $scope.items[i].width = $scope.images[i].derivatives.small.width;
                         $scope.items[i].height = $scope.images[i].derivatives.small.height;
                     }
-                    if ($scope.shuffle)
-                        $scope.items = $scope.shuffleArray($scope.items);
+        	    $interval($scope.shuffle,5000);
+                    //if ($scope.shuffle)
+                        //$scope.items = $scope.shuffleArray($scope.items);
                 });
+
+
     }])
 
 </script>
