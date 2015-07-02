@@ -5,7 +5,8 @@
     <title>Imagens EESC</title>
 </head>
 <body ng-controller="DemoCtrl">
-<h1>Escola de Engenharia de São Carlos</h1>
+<h2>EESC em Imagens</h2>
+<a href="/imagens">Galeria</a>
 
 <div magicview class="magicview" data-items="items">
     <div class="item" ng-repeat="item in items | limitTo:quantity">
@@ -17,6 +18,18 @@
 <script src="./lib/angular-magicview/js/magicview.js"></script>
 
 <script type="text/javascript">
+    /*
+     busca imagens na galeria piwigo e mostra as imagens aleatoriamente ajustando a largura
+     para ficarem justificados.
+     Usa api do piwigo
+     usa magicview
+
+     History:
+     29/6/2015
+     - Implementação inicial com funcionalidade basica
+
+     */
+
     angular.module('ui.magicview')
             .value('rconfig', {
                 maxHeight: 180,
@@ -29,25 +42,21 @@
 
         $scope.tag = 'public';
         $scope.get = 'http://imagens.eesc.usp.br/imagens/ws.php?format=json&method=pwg.images.search&query=tag=' + $scope.tag;
-        // $scope.shuffle = true;
-        $scope.size = 'small';
-        $scope.quantity = 16;
+        $scope.size = 'small';// better than thumb. Depends on piwigo derivatives
+        $scope.quantity = 16; //max item images to show
 
-        Array.prototype.swap = function (x,y) {
+        Array.prototype.swap = function (x, y) {
             var b = this[x];
             this[x] = this[y];
             this[y] = b;
             return this;
         };
 
-        // -> Fisher–Yates shuffle algorithm
         $scope.shuffleArray = function (array) {
-            var m = array.length, t, i;
-
-            // While there remain elements to shuffle
+            var m = array.length, i;
             while (m) {
-                i = Math.floor(Math.random() * m--); // Pick a remaining element…
-                array.swap(m,i); // And swap it with the current element.
+                i = Math.floor(Math.random() * m--); // Pick a remaining element
+                array.swap(m, i); // And swap it with the current element
             }
             return array;
         };
@@ -66,13 +75,8 @@
                     $interval(function () {
                         $scope.items = $scope.shuffleArray($scope.items);
                     }, 5000);
-                    //if ($scope.shuffle)
-                    //$scope.items = $scope.shuffleArray($scope.items);
                 });
-
-
-    }])
-
+    }]);
 </script>
 </body>
 </html>
